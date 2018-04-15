@@ -1,5 +1,5 @@
 NAME=sed
-VERSION=4.4
-REVISION=2
-SRC=http://ftp.gnu.org/gnu/sed/sed-4.4.tar.xz
-SRCMD5=e0c583d4c380059abd818cd540fe6938
+VERSION=4.5
+REVISION=1
+SRC=http://ftp.gnu.org/gnu/sed/sed-4.5.tar.xz
+SRCMD5=ade8f8c2c548bf41f74db2dcfc37e4e3

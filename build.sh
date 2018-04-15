@@ -1,18 +1,22 @@
 #!/bin/bash
-case "$SHED_BUILDMODE" in
+case "$SHED_BUILD_MODE" in
     toolchain)
-        ./configure --prefix=/tools || return 1
-        make -j $SHED_NUMJOBS || return 1
-        make DESTDIR="$SHED_FAKEROOT" install || return 1
+        ./configure --prefix=/tools &&
+        make -j $SHED_NUM_JOBS &&
+        make DESTDIR="$SHED_FAKE_ROOT" install || exit 1
         ;;
     *)
-        sed -i 's/usr/tools/' build-aux/help2man
-        sed -i 's/testsuite.panic-tests.sh//' Makefile.in
-        ./configure --prefix=/usr --bindir=/bin || return 1
-        make -j $SHED_NUMJOBS || return 1
-        make html || return 1
-        make DESTDIR="$SHED_FAKEROOT" install || return 1
-        install -d -m755 "${SHED_FAKEROOT}/usr/share/doc/sed-4.4"
-        install -m644 doc/sed.html "${SHED_FAKEROOT}/usr/share/doc/sed-4.4"
+        sed -i 's/usr/tools/' build-aux/help2man &&
+        sed -i 's/testsuite.panic-tests.sh//' Makefile.in &&
+        ./configure --prefix=/usr --bindir=/bin &&
+        make -j $SHED_NUM_JOBS || exit 1
+        if $SHED_INSTALL_DOCS; then
+            make html || exit 1
+        fi
+        make DESTDIR="$SHED_FAKE_ROOT" install || exit 1
+        if $SHED_INSTALL_DOCS; then
+            install -d -m755 "${SHED_FAKE_ROOT}/usr/share/doc/sed-${SHED_PKG_VERSION}" &&
+            install -m644 doc/sed.html "${SHED_FAKE_ROOT}/usr/share/doc/sed-${SHED_PKG_VERSION}"
+        fi
         ;;
 esac
